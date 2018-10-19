@@ -7,6 +7,32 @@ class ProductPage extends StatelessWidget {
 
   ProductPage(this.title, this.imageUrl);
 
+  Future _showWarningDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('This action cannot be undone!'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('DISCARD'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('CONTINUE'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context, true);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -16,23 +42,24 @@ class ProductPage extends StatelessWidget {
           return Future.value(false);
         },
         child: Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(imageUrl),
-          Container(padding: EdgeInsets.all(10.0), child: Text(title)),
-          Container(
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                child: Text('DELETE'),
-                onPressed: () => Navigator.pop(context, true),
-              ))
-        ],
-      ),
-    ));
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(imageUrl),
+              Container(padding: EdgeInsets.all(10.0), child: Text(title)),
+              Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: RaisedButton(
+                    child: Text('DELETE'),
+                    onPressed: ()  =>
+                      _showWarningDialog(context),
+                  ))
+            ],
+          ),
+        ));
   }
 }
